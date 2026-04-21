@@ -5,6 +5,8 @@
 [Ll]ogs/
 UserSettings/
 
+.vs/
+
 *.csproj
 *.unityproj
 *.sln
