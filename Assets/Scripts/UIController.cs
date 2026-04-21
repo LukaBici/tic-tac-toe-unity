@@ -3,7 +3,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Slider _musicSlider, _sfxSlider;
-
+ 
     public void ToggleMusic() {
         AudioManager.Instance.ToggleMusic();
     }
@@ -21,4 +21,5 @@ public class UIController : MonoBehaviour
     {
         AudioManager.Instance.sfxVoulume(_sfxSlider.value);
     }
+    
 }
