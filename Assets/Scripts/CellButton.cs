@@ -24,9 +24,19 @@ public class CellButton : MonoBehaviour
         isUsed = true;
 
         if (GameManager.Instance.isXTurn)
+        {
             image.sprite = xSprite;
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX("Click1");
+        }
         else
+        {
             image.sprite = oSprite;
+
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX("Click2");
+        }
 
         GameManager.Instance.MakeMove(row, col);
     }
