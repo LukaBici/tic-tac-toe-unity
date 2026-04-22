@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
+using System.Runtime.InteropServices.WindowsRuntime;
 public class UIManager : MonoBehaviour
 {
     public Text timerText;
@@ -12,6 +13,8 @@ public class UIManager : MonoBehaviour
 
     private float timeElapsed = 0f;
     private bool gameEnded = false;
+
+    public object DebugLog { get; private set; }
 
     void Update()
     {
@@ -40,6 +43,24 @@ public class UIManager : MonoBehaviour
         gameOverPanel.SetActive(true);
         resultText.text = result;
         finalTimeText.text = timerText.text;
+
+        // Convert result to winner ID
+        int winner = GetWinnerId(result);
+
+        // Send stats
+        GameStatsManager.Instance.AddResult(winner, timeElapsed);
+    }
+
+    int GetWinnerId(string result)
+    {
+        result = result.ToLower();
+
+        if (result.Contains("x wins")) return 1;
+        if (result.Contains("o wins")) return 2;
+        if (result.Contains("draw")) return 0;
+
+        Debug.LogWarning("Unknown result string: " + result);
+        return 0;
     }
 
     public void Retry()
