@@ -5,27 +5,33 @@ using UnityEngine.EventSystems;
 public class ClickTransparency : MonoBehaviour, IPointerClickHandler
 {
     private Image img;
-    private bool isTransparent = false;
+    private const string KEY = "ButtonAlpha";
 
     void Start()
     {
         img = GetComponent<Image>();
+
+        float alpha = PlayerPrefs.GetFloat(KEY, 1f);
+        Apply(alpha);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Color col = img.color;
+        float currentAlpha = PlayerPrefs.GetFloat(KEY, 1f);
 
-        if (isTransparent)
-        {
-            col.a = 1f; // fully visible
-        }
-        else
-        {
-            col.a = 0.5f; // semi-transparent
-        }
+        // toggle based on actual saved value
+        float newAlpha = (currentAlpha >= 1f) ? 0.5f : 1f;
 
-        img.color = col;
-        isTransparent = !isTransparent;
+        Apply(newAlpha);
+
+        PlayerPrefs.SetFloat(KEY, newAlpha);
+        PlayerPrefs.Save();
+    }
+
+    private void Apply(float alpha)
+    {
+        Color c = img.color;
+        c.a = alpha;
+        img.color = c;
     }
 }

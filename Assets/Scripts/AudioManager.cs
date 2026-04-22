@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-using Unity.Collections;
+
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager Instance;
@@ -8,80 +8,124 @@ public class AudioManager : MonoBehaviour
     public Sound[] musicSounds, sfxSounds;
     public AudioSource musicSource, sfxSource;
 
-    //Static Instance so it can be accesed from anywhere
-    public void Awake()
+    private bool musicMuted;
+    private bool sfxMuted;
+
+    private float musicVolume = 1f;
+    private float sfxVolume = 1f;
+
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
-
-        else {
-            DestroyObject(gameObject);
+        else
+        {
+            Destroy(gameObject);
         }
     }
-    //Music Starts at same time as game 
-    private void Start() {
+
+    private void Start()
+    {
+        LoadSettings();
+        ApplySettings();
         PlayMusic("music");
     }
 
-    //Play Music
+    // ---------- PLAY ----------
     public void PlayMusic(string name)
     {
         Sound s = Array.Find(musicSounds, x => x.name == name);
 
         if (s == null)
         {
-            Debug.Log("Sound Not Found");
+            Debug.Log("Music Not Found: " + name);
+            return;
         }
 
-        else
-        {
-            musicSource.clip = s.clip;
-            musicSource.Play();
-
-        }
+        musicSource.clip = s.clip;
+        musicSource.Play();
     }
-    //Play SFX
+
     public void PlaySFX(string name)
     {
-
         Sound s = Array.Find(sfxSounds, x => x.name == name);
 
         if (s == null)
         {
-            Debug.Log("Sound Not Found");
+            Debug.Log("SFX Not Found: " + name);
+            return;
         }
 
-        else
-        {
-
-            sfxSource.PlayOneShot(s.clip);
-
-
-        }
-
+        sfxSource.PlayOneShot(s.clip);
     }
 
-    //Button music and sfx on and off
-    public void ToggleMusic() {
-        musicSource.mute = !musicSource.mute; 
+    // ---------- TOGGLES ----------
+    public void ToggleMusic()
+    {
+        musicMuted = !musicMuted;
+        ApplyMusic();
+
+        PlayerPrefs.SetInt("MusicMute", musicMuted ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
     public void ToggleSFX()
     {
-        sfxSource.mute = !sfxSource.mute;
+        sfxMuted = !sfxMuted;
+        ApplySFX();
+
+        PlayerPrefs.SetInt("SFXMute", sfxMuted ? 1 : 0);
+        PlayerPrefs.Save();
     }
 
-    //Slide music and sfx volume
-
-    public void MusicVoulume(float volume) {
-        musicSource.volume = volume;
-    }
-
-    public void sfxVoulume(float volume)
+    // ---------- VOLUME ----------
+    public void MusicVolume(float volume)
     {
-        sfxSource.volume = volume;
+        musicVolume = volume;
+        ApplyMusic();
+
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
+        PlayerPrefs.Save();
+    }
+
+    public void SFXVolume(float volume)
+    {
+        sfxVolume = volume;
+        ApplySFX();
+
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        PlayerPrefs.Save();
+    }
+
+    // ---------- APPLY ----------
+    private void ApplySettings()
+    {
+        ApplyMusic();
+        ApplySFX();
+    }
+
+    private void ApplyMusic()
+    {
+        musicSource.mute = musicMuted;
+        musicSource.volume = musicVolume;
+    }
+
+    private void ApplySFX()
+    {
+        sfxSource.mute = sfxMuted;
+        sfxSource.volume = sfxVolume;
+    }
+
+    // ---------- LOAD ----------
+    private void LoadSettings()
+    {
+        musicMuted = PlayerPrefs.GetInt("MusicMute", 0) == 1;
+        sfxMuted = PlayerPrefs.GetInt("SFXMute", 0) == 1;
+
+        musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
     }
 }
