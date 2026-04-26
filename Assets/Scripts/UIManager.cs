@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections;
 public class UIManager : MonoBehaviour
 {
     public Text timerText;
     public Text moveText;
-
+    public GameObject settingsButton;
     public GameObject gameOverPanel;
     public Text resultText;
     public Text finalTimeText;
@@ -38,17 +39,27 @@ public class UIManager : MonoBehaviour
 
     public void ShowGameOver(string result)
     {
+       
         gameEnded = true;
 
-        gameOverPanel.SetActive(true);
-        resultText.text = result;
-        finalTimeText.text = timerText.text;
+        StartCoroutine(ShowGameOverDelayed(result));
 
         // Convert result to winner ID
         int winner = GetWinnerId(result);
 
         // Send stats
         GameStatsManager.Instance.AddResult(winner, timeElapsed);
+    }
+
+    private IEnumerator ShowGameOverDelayed(string result)
+    {
+       
+
+        yield return new WaitForSeconds(3f);
+        settingsButton.SetActive(false);
+        gameOverPanel.SetActive(true);
+        resultText.text = result;
+        finalTimeText.text = timerText.text;
     }
 
     int GetWinnerId(string result)

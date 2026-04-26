@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 9091670520706318189}
   - component: {fileID: 4434404526128844126}
   - component: {fileID: 1488707401824914129}
-  - component: {fileID: 5506905708039305919}
   m_Layer: 5
   m_Name: GridSpace
   m_TagString: Untagged
@@ -121,15 +120,3 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &5506905708039305919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18884907649367637}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4168daae8d586e740be615918ff80485, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GridSpace
