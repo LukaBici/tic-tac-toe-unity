@@ -56,7 +56,7 @@ public class CellButton : MonoBehaviour
         }
 
         winHighlight.gameObject.SetActive(true);
-
+        AudioManager.Instance.PlaySFX("Pop");
         winHighlight.transform.rotation =
             Quaternion.Euler(0, 0, Random.Range(0f, 360f));
     }
